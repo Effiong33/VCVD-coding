@@ -1,0 +1,61 @@
+import math
+import matplotlib.pyplot as plt
+
+def braking_distance(mass, velocity, road_type, wet_dry, inclination, reaction_time):
+    G = 9.81
+    Mu = {
+        'asphalt': {'dry': 0.5, 'wet': 0.35},
+        'gravel': {'dry': 0.35, 'wet': 0.3}
+    }
+    friction = Mu[road_type][wet_dry]
+    friction *= math.cos(math.radians(inclination))
+    deceleration = friction * G
+    braking_distance = velocity * reaction_time + (velocity ** 2) / (2 * deceleration)
+    return braking_distance
+
+def velocity_time_graph(mass, velocity, road_type, wet_dry, inclination, reaction_time, time_interval):
+    time_points = [t for t in range(int(time_interval) + 1)]
+    velocities = []
+    for t in time_points:
+        braking_dist = braking_distance(mass, velocity, road_type, wet_dry, inclination, reaction_time)
+        velocities.append(velocity - (braking_dist / reaction_time) if t * velocity <= braking_dist else 0)
+    return time_points, velocities
+
+def distance_time_graph(mass, velocity, road_type, wet_dry, inclination, reaction_time, time_interval):
+    time_points = [t for t in range(int(time_interval) + 1)]
+    distances = []
+    for t in time_points:
+        braking_dist = braking_distance(mass, velocity, road_type, wet_dry, inclination, reaction_time)
+        distances.append(velocity * t - (0.5 * braking_dist * (t ** 2) / reaction_time) if t * velocity <= braking_dist else braking_dist)
+    return time_points, distances
+
+# Take user inputs with validation
+try:
+    mass = float(input("Enter the mass of the car in kg: "))
+    velocity = float(input("Enter the velocity of the car in m/s: "))
+    road_type = input("Enter the road type (asphalt/gravel): ").lower()
+    wet_dry = input("Enter the road condition (wet/dry): ").lower()
+    inclination = float(input("Enter the inclination of the road in degrees: "))
+    reaction_time = float(input("Enter the driver's reaction time in seconds: "))
+    time_interval = float(input("Enter the time interval for the graphs in seconds: "))
+except ValueError:
+    print("Invalid input. Please enter numerical values where required.")
+    exit()
+
+# Create velocity-time graph
+time_v, velocities = velocity_time_graph(mass, velocity, road_type, wet_dry, inclination, reaction_time, time_interval)
+plt.plot(time_v, velocities)
+plt.xlabel('Time (s)')
+plt.ylabel('Velocity (m/s)')
+plt.title('Velocity-Time Graph')
+plt.grid(True)
+plt.show()
+
+# Create distance-time graph
+time_d, distances = distance_time_graph(mass, velocity, road_type, wet_dry, inclination, reaction_time, time_interval)
+plt.plot(time_d, distances)
+plt.xlabel('Time (s)')
+plt.ylabel('Distance (m)')
+plt.title('Distance-Time Graph')
+plt.grid(True)
+plt.show()
