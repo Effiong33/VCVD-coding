@@ -5,9 +5,13 @@ File name: `ntekim_emmanuel_2310787015_effiong_vccd1_py`
 
 Sample call statement: `python ntekim_emmanuel_2310787015_effiong_vccd1_py.py`
 
+
+
 When you run the application, it will request the user to input parameters:
 
 ![image](https://github.com/Effiong33/VCVD-coding/assets/159038026/0516a8dc-71f3-4a89-b74c-b573c41d6b24)
+
+
 
 Output will be braking distance, then an image with relevant graphs:
 
